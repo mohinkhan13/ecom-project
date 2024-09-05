@@ -1,0 +1,52 @@
+{% extends 'seller-header.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 grid-margin stretch-card mx-auto">
+    <div class="card">
+        {% if msg %}
+        <p style="font-size: 18px;" class="card-description p-3 text-white text-center bg-success">{{ msg }}</p>
+        {% endif %}
+        <div class="card-body">
+            <h4 class="card-title text-center">Add Product</h4>            
+            <form class="forms-sample material-form" enctype="multipart/form-data" method="POST" action="{% url 'seller-add-product' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <select name="product_category" class="form-control" required>
+                        <option value="">Select Category</option></option>
+                        {% for i in cat %}
+                        <option value="{{ i.name }}">{{ i.name|upper }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">                    
+                    <input type="text" name="product_name" required="required" />
+                    <label for="input" class="control-label">Product Name</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="product_price" required="required" />
+                    <label for="input" class="control-label">Product Price</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="highlight_price" required="required" />
+                    <label for="input" class="control-label">Highlight Price</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Description" name="product_desc" rows="9"></textarea>
+                    <label for="input" class="control-label"></label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="file" name="product_image" alt="Product img" >
+                    <label for="input" class="control-label">Product Image</label><i class="bar"></i>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="button btn btn-primary"><span>Submit</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

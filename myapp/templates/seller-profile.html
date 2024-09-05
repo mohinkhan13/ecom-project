@@ -1,0 +1,47 @@
+{% extends 'seller-header.html' %}
+
+{% block title %}Supplier Home{% endblock %}
+
+{% block content %}
+
+<div class="col-md-6 grid-margin stretch-card mx-auto">
+    <div class="card">
+        <p style="font-size: 18px;" class="card-description p-3 text-white text-center bg-success">{{ msg }}</p>
+        <div class="card-body">
+            <h4 class="card-title text-center">Seller Profile</h4>        
+            <form class="forms-sample material-form" method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <img src="{{request.session.profile_picture}}" width="90" height="90" style="border-radius: 50%; margin: 10px auto; display: block;object-fit: cover;">
+                <div class="form-group">                    
+                    <input type="text" value="{{user.fname}}" placeholder="First Name" name="fname" required>
+                    <label for="input" class="control-label">First Name</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="text" value="{{user.lname}}" placeholder="Last Name" name="lname" required>
+                    <label for="input" class="control-label">Last Name</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="email" value="{{user.email}}" placeholder="Email" name="email" readonly style="font-weight: bold;color: grey;">
+                    <label for="input" class="control-label"></label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="tel" value="{{user.mobile}}" placeholder="Mobile Number" name="mobile" required>
+                    <label for="input" class="control-label">Mobile Number</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Address" name="address">{{user.address}}</textarea>
+                    <label for="input" class="control-label">Address</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="file" name="profile_picture" alt="User img" >
+                    <label for="input" class="control-label">Profile Picture</label><i class="bar"></i>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="button btn btn-primary"><span>Submit</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

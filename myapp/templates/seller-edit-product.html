@@ -1,0 +1,61 @@
+{% extends 'seller-header.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 grid-margin stretch-card mx-auto">
+    <div class="card">
+        {% if msg %}
+        <p style="font-size: 18px;" class="card-description p-3 text-white text-center bg-success">{{ msg }}</p>
+        {% endif %}
+        <div class="card-body">
+            <h4 class="card-title text-center">Add Product</h4>            
+            <form class="forms-sample material-form" enctype="multipart/form-data" method="POST" action="{% url 'seller-edit-product' id=product.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                <select name="product_category">
+                    <option>----  Select Category  ----</option>
+                    {% for c in cat %}
+                     <option value="{{c.name}}" {% if c.id == product.product_category.id %}selected{% endif %}>{{ c.name|upper }}</option>                    
+                    {% endfor %}
+                </select>
+                </div>
+                <div class="form-group">
+                <!-- <label for="is_featured" class="control-label">Is Featured:</label> -->
+                <select id="is_featured" name="is_featured" class="form-control" required>
+                    <option>----Is Product Featured----</option>
+                    <option value="True" {% if product.is_featured %}selected{% endif %}>Yes</option>
+                    <option value="False" {% if not product.is_featured %}selected{% endif %}>No</option>
+                </select>
+            </div>
+                <div class="form-group">                    
+                    <input value="{{product.product_name}}" type="text" name="product_name" required="required" />
+                    <label for="input" class="control-label">Product Name</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input value="{{product.product_price}}" type="text" name="product_price" required="required" />
+                    <label for="input" class="control-label">Product Price</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input value="{{product.highlight_price}}" type="text" name="highlight_price" required="required" />
+                    <label for="input" class="control-label">Highlight Price</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Description" name="product_desc" rows="9">{{product.product_desc}}</textarea>
+                    <label for="input" class="control-label"></label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <img src="{{product.product_image.url}}" style="width:150px;height: 150px; border-radius: 50%; object-fit:cover;" class="mt-5 mb-5">
+                    <input type="file" name="product_image" alt="Product img" >
+                    <label for="input" class="control-label">Product Image</label><i class="bar"></i>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="button btn btn-primary"><span>Submit</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

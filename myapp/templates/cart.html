@@ -1,0 +1,202 @@
+{% extends 'header.html' %}
+{% block content %}
+{% load static %}
+<style type="text/css">
+    .quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ccc;
+    height: 30px;
+    margin: 0 5px;
+}
+
+</style>
+<script src="https://js.stripe.com/v3/"></script>
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="/"><i class="fa fa-home"></i> Home</a>
+                        <span>Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Shop Cart Section Begin -->
+    <section class="shop-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% if carts %}
+                    <div class="shop__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>                                
+                                {% for c in carts%}
+                                <tr>
+                                    <td class="cart__product__item">
+                                        <img width="50" src="{{c.product.product_image.url}}" alt="">
+                                        <div class="cart__product__item__title">
+                                            <h6>{{c.product.product_name}}</h6>
+                                            <!-- <div class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div> -->
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">₹ {{c.product.product_price}}</td>
+                                    <td class="cart__quantity">
+                                        <div class="pro-qty">
+                                            <form method="post" action="{% url 'change-qty' %}">
+                                                {% csrf_token %}
+                                            <div class="input-group mb-3">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="decrementQty({{ forloop.counter0 }})">-</button>
+                                                <input type="text" name="product_qty" value="{{ c.product_qty }}" min="1" max="10" class="form-control text-center" onchange="this.form.submit();" id="product_qty_{{ forloop.counter0 }}">
+                                                <input type="hidden" name="cid" value="{{ c.id }}">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="incrementQty({{ forloop.counter0 }})">+</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </td>
+                                    <td class="cart__total">₹ {{c.total_price }}</td>
+                                    <td class="cart__close">
+                                        <a href="{% url 'remove-cart' id=c.product.id %}">
+                                            <span class="icon_close"></span>
+                                        </a>
+                                    </td>
+                                </tr>     
+                                {% endfor %}
+
+                            </tbody>
+                        
+                        </table>
+                        {% else %}
+                        <h4>No Product In Cart Yet! Please Add Product</h4> 
+                        {% endif %}                          
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <!-- <div class="col-lg-6">
+                    <div class="discount__content">
+                        <h6>Discount codes</h6>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your coupon code">
+                            <button type="submit" class="site-btn">Apply</button>
+                        </form>
+                    </div>
+                </div> -->
+                {% if carts %}
+                <div class="col-lg-4 mx-auto offset-lg-2">
+                    <div class="cart__total__procced">
+                        <h6>Cart total</h6>
+                        <ul>
+                            <li>Subtotal <span>₹ {{net_price}}</span></li>
+                            <li>Total <span>₹ {{net_price}}</span></li>
+                        </ul>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" id="net_price" name="amount" value="{{net_price}}">                            
+                            <button type="button" class="btn primary-btn px-5 mx-auto" id="checkout-button">Checkout</button>
+                        </form>                   
+
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <!-- Shop Cart Section End -->
+<script type="text/javascript">
+
+var stripe = Stripe('pk_test_51MshH6SJuXwPfjjrrgxJ5tubbOgYAhRrqNcd4RDUSq1peWpIMZrjhIiTncSUWO9u6byeDf4KxdZPkFD4hU55mVOg00aRL5RT8x');
+var checkoutButton = document.getElementById('checkout-button');
+
+checkoutButton.addEventListener('click', function() { 
+ fetch('/create-checkout-session/', {
+ method: 'POST',
+    headers:{
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+
+    },
+    body: JSON.stringify({
+            'post_data': '{{net_price}}',                
+        })
+    })
+ .then(function(response) {
+ return response.json();
+ })
+ .then(function(session) {
+ return stripe.redirectToCheckout({ sessionId: session.id });
+ })
+ .then(function(result) {
+ // If `redirectToCheckout` fails due to a browser or network
+ // error, you should display the localized error message to your
+ // customer using `error.message`.
+ if (result.error) {
+ alert(result.error.message);
+ }
+ })
+ .catch(function(error) {
+ console.error('Error:', error);
+ });
+ });
+ </script> 
+    
+<script>
+    function decrementQty(index) {
+    var qtyInput = document.getElementById('product_qty_' + index);
+    var qty = parseInt(qtyInput.value);
+    if (qty > 1) {
+        qtyInput.value = qty - 1;
+        qtyInput.form.submit();
+    }
+}
+
+function incrementQty(index) {
+    var qtyInput = document.getElementById('product_qty_' + index);
+    var qty = parseInt(qtyInput.value);
+    if (qty < 10) {
+        qtyInput.value = qty + 1;
+        qtyInput.form.submit();
+    }
+}
+</script>
+
+
+{% endblock %}

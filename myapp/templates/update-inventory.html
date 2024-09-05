@@ -1,0 +1,28 @@
+{% extends 'seller-header.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 grid-margin stretch-card mx-auto">
+    <div class="card">
+        {% if msg %}
+        <p style="font-size: 18px;" class="card-description p-3 text-white text-center bg-success">{{ msg }}</p>
+        {% endif %}
+        <div class="card-body">
+            <h4 class="card-title text-center">Update Stock</h4>            
+            <form class="forms-sample material-form" enctype="multipart/form-data" method="POST" action="">
+                {% csrf_token %}                
+                <div class="form-group">                    
+                    <input type="text" value="{{item.stock}}" name="stock" required="required" />
+                    <label for="input" class="control-label">Currunt Stock</label><i class="bar"></i>
+                </div>                
+                <div class="button-container">
+                    <button type="submit" class="button btn btn-primary"><span>Submit</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

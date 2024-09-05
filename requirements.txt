@@ -1,0 +1,16 @@
+annotated-types==0.7.0
+asgiref==3.8.1
+cashfree==1.0.1
+certifi==2024.7.4
+charset-normalizer==3.3.2
+Django==5.1
+idna==3.7
+pillow==10.4.0
+pydantic==2.8.2
+pydantic_core==2.20.1
+requests==2.32.3
+sqlparse==0.5.1
+stripe==10.9.0
+typing_extensions==4.12.2
+tzdata==2024.1
+urllib3==2.2.2

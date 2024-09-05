@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <style>
+      {% block css%} {%endblock%}
+    </style>
+    {% load static %}
+
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.css" />
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/typicons/typicons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/simple-line-icons/css/simple-line-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'admin/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/assets/js/select.dataTables.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'admin/assets/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- endinject -->
+    <!-- <link rel="shortcut icon" href="{% static 'admin/assets/images/favicon.png' %}" /> -->
+    <style>
+      .ck-editor__editable_inline {
+        min-height: 400px; /* Set the minimum height */
+        max-height: 400px; /* Set the maximum height to keep it consistent */
+        overflow-y: auto;  /* Make the editor scrollable */
+    }
+    </style>
+    
+    <script>
+        function getGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            let greeting;
+
+            if (hour < 12) {
+                greeting = "Good Morning";
+            } else if (hour < 18) {
+                greeting = "Good Afternoon";
+            } else {
+                greeting = "Good Evening";
+            }
+
+            return greeting;
+        }
+
+        function displayGreeting() {
+            const greetingElement = document.getElementById('dynamic-greeting');
+            const userName = "{{ request.session.fname }} {{ request.session.lname }}";  // Use session data for user's name
+            greetingElement.innerHTML = `${getGreeting()}, <span class="text-black fw-bold">${userName}</span>`;
+        }
+
+        window.onload = displayGreeting;
+    </script>
+</head>
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      <!-- Navbar Start Here  -->
+
+       <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+          <div class="me-3">
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+              <span class="icon-menu"></span>
+            </button>
+          </div>
+          <div>
+            <a class="navbar-brand brand-logo" href="/">
+              <img src="{% static 'admin/assets/images/logo.svg' %}" alt="logo" />
+            </a>
+            <a class="navbar-brand brand-logo-mini" href="/">
+              <img src="{% static 'admin/assets/images/logo-mini.svg' %}" alt="logo" />
+            </a>
+          </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-top">
+          <ul class="navbar-nav">
+            <li class="nav-item fw-semibold d-none d-lg-block ms-0">
+              <h1 class="welcome-text" id="dynamic-greeting">, <span class="text-black fw-bold"></span></h1>              
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">          
+            <li class="nav-item">
+              <form class="search-form" action="#">
+                <i class="icon-search"></i>
+                <input type="search" class="form-control" placeholder="Search Here" title="Search here">
+              </form>
+            </li>                
+            <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+              <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="img-xs rounded-circle" src="{{ request.session.profile_picture }}" style="object-fit: cover;" alt="Profile image"> </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                <div class="dropdown-header text-center">
+                  <img class="img-md rounded-circle" src="{{ request.session.profile_picture }}" style="width:80px;height: 80px; object-fit: cover;" alt="Profile image">
+                  <p class="mb-1 mt-3 fw-semibold">{{ request.session.fname }} {{ request.session.lname }}</p>
+                  <p class="fw-light text-muted mb-0">{{request.session.email}}</p>
+                </div>
+                <a class="dropdown-item" href="{% url 'profile' %}"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>               
+                              
+                <a class="dropdown-item" href="{% url 'change-password' %}"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> Change Password</a>
+                <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-cog-outline text-primary me-2"></i> Setting</a>
+                <a class="dropdown-item" href="{% url 'logout'%}"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+              </div>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Navbar Ends -->
+      <div class="container-fluid page-body-wrapper">
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/">             
+                <i class="mdi mdi-grid-large menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item nav-category"></li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'seller-product' %}" >
+                <i class="menu-icon fa-solid fa-basket-shopping"></i>
+                <span class="menu-title">Product</span>                
+              </a>              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'seller-product-category' %}" >
+                <i class="fa-solid fa-list menu-icon"></i>
+                <span class="menu-title">Category</span>                
+              </a>              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'seller-orders' %}">
+                <i class="menu-icon fa-solid fa-cart-shopping"></i>
+                <span class="menu-title">Orders</span>                
+              </a>              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="menu-icon fa-solid fa-rotate-left"></i>
+                <span class="menu-title">Returns</span>                
+              </a>              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'seller-inventory' %}" aria-expanded="false" aria-controls="ui-basic">
+                <i class="menu-icon fa-solid fa-warehouse"></i>
+                <span class="menu-title">Inventory</span>                
+              </a>              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="menu-icon fa-solid fa-money-bill-wave"></i>
+                <span class="menu-title">Payments</span>                
+              </a>              
+            </li>          
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="menu-icon fa-solid fa-gear"></i>
+                <span class="menu-title">Setting</span>                
+              </a>              
+          </ul>
+        </nav>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="home-tab">
+
+                    {% block content %}{% endblock %}
+                </div>
+              </div>
+            </div>
+          </div> 
+         
+        <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
+              <span class="float-none float-sm-end d-block mt-1 mt-sm-0 text-center">Copyright © 2023. All rights reserved.</span>
+            </div>
+          </footer>
+        </div>  
+        </div>    
+    </div>
+    
+    <script src="{% static 'admin/assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="{% static 'admin/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static 'admin/assets/vendors/chart.js/chart.umd.js' %}"></script>
+    <script src="{% static 'admin/assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{% static 'admin/assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'admin/assets/js/template.js' %}"></script>
+    <script src="{% static 'admin/assets/js/settings.js' %}"></script>
+    <script src="{% static 'admin/assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'admin/assets/js/todolist.js' %}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="{% static 'admin/assets/js/jquery.cookie.js" type="text/javascript' %}"></script>
+    <script src="{% static 'admin/assets/js/dashboard.js' %}"></script>
+    <!-- <script src="assets/js/Chart.roundedBarCharts.js"></script> -->
+    <!-- End custom js for this page-->
+
+    <script type="importmap">
+      {
+          "imports": {
+              "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.js",
+              "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.0.0/"
+          }
+      }
+  </script>
+
+  <script type="module">
+    import {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Font,
+        Paragraph
+    } from 'ckeditor5';
+
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            plugins: [Essentials, Bold, Italic, Font, Paragraph],
+            toolbar: {
+                items: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            }
+        })
+        .then(editor => {
+            const editableElement = editor.ui.view.editable.element;
+            editableElement.style.minHeight = '400px'; // Set the height
+            editableElement.style.maxHeight = '400px'; // Fix the max height
+            editableElement.style.overflowY = 'auto';  // Enable vertical scrolling
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+
+</body>
+</html>

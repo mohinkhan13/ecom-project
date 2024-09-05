@@ -1,0 +1,119 @@
+{% extends 'header.html' %}
+{% block content %}
+{% load static %}
+<style type="text/css">
+    .selecte_input{
+    height: 50px;
+    width: 100%;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #444444;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.c_alert{
+    background-color: lightcoral; 
+    color: white; 
+    display: inline-block; 
+    padding: 0px 10px; 
+    border-radius: 5px; 
+    text-align: center;
+}
+.c_success{
+    background-color: green; 
+    color: white; 
+    display: inline-block; 
+    padding: 0px 10px; 
+    border-radius: 5px; 
+    text-align: center;
+}
+</style>
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="/"><i class="fa fa-home"></i> Home</a>
+                        <span>Register</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Contact Section Begin -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 mx-auto">
+                    <div class="contact__content">
+                        {% if msg%}
+                            <p class="c_alert">{{msg}}</p>
+                        {% endif %}
+                        <div class="contact__form">
+                            <h5>Register</h5>
+                            <form method="POST" action="{% url 'register'%}" enctype="multipart/form-data">
+                                {% csrf_token %}                                
+                                <select name="usertype" class="selecte_input">
+                                    <option value="" >-----  Select User Type  -----</option>
+                                    <option value="buyer">Buyer</option>
+                                    <option value="seller">Seller</option>
+                                </select>
+                                <input type="text" placeholder="First Name" name="fname" required>
+                                <input type="text" placeholder="Last Name" name="lname" required>
+                                <input type="email" placeholder="Email" name="email" id="user_email" required>
+                                <p id="email_error" class=""></p>
+                                <input type="tel" placeholder="Mobile Number" name="mobile" required>                              
+                                <textarea placeholder="Address" name="address" required></textarea>
+                                <input type="password" placeholder="Password" name="password" id="password" required>
+                                <input type="password" placeholder="Confirm Password" name="cpassword" id="confirm_password" required>
+                                <p id="password_error" class="c_alert"></p>
+                                <input type="file" name="profile_picture" alt="User img" required>
+                                <button type="submit" class="site-btn">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#confirm_password").keyup(function(){
+            var password = $("#password").val();
+            var confirm_password = $(this).val();
+            
+            $.ajax({
+                url: '{% url "validate_passwords" %}',  // Ensure this URL matches your Django URL pattern
+                data: {
+                    'password': password,
+                    'confirm_password': confirm_password
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var passwordError = $("#password_error");
+                    if (data.passwords_match) {
+                        passwordError.removeClass("c_alert").addClass("c_success");
+                        passwordError.html("Passwords match");
+                    } else {
+                        $("#password_error").html("Passwords do not match");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);  // Debugging line
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Contact Section End -->
+{% endblock%}
