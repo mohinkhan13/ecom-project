@@ -1,6 +1,10 @@
 # 🛒 E-Commerce Project (Django)
 
-This is a beginner-friendly e-commerce web application built using the Django framework. The project aims to simulate a basic online shopping experience and can be extended with features like cart, checkout, user login, and payment gateway integration.
+This is a full-featured e-commerce web application built using the Django framework. It supports both **buyer** and **seller** roles and includes features like user authentication, product listing, wishlist, cart management, online payment via Stripe, and order tracking.
+
+---
+
+## 🖼️ Project Screenshot
 
 ![Project Screenshot](https://github.com/mohinkhan13/ecom-project/blob/main/media/HomePage.png)
 ![Project Screenshot](https://github.com/mohinkhan13/ecom-project/blob/main/media/Producthome.png)
@@ -11,86 +15,132 @@ This is a beginner-friendly e-commerce web application built using the Django fr
 ![Project Screenshot](https://github.com/mohinkhan13/ecom-project/blob/main/media/myorders.png)
 ![Project Screenshot](https://github.com/mohinkhan13/ecom-project/blob/main/media/orderDetail.png)
 
-## 🚀 Features
 
-- 🏠 Home Page 
-- 🛍️ Product Listing 
-- 🔍 Product Detail Page 
-- ➕ Add to Cart
-- 🛒 View Cart
-- 💳 Checkout System
-- 👤 User Authentication (Login & Signup)
-- 📦 Order Tracking
-- ⚙️ Admin Panel for Product Management (Working)
-- 🔎 Search and Filter Products
+---
 
-## 📁 Project Structure
+## 🚀 Key Features
 
-```
+### 👤 User Management
+
+* Register as Buyer or Seller
+* Login / Logout functionality
+* Change & reset password (OTP-based via mobile)
+* Profile update with image upload
+
+### 📅 Product Management (Seller)
+
+* Add, edit, delete products
+* Manage categories
+* View product-wise inventory
+* Update stock levels
+* View seller orders & order details
+
+### 🌟 Product Display (Buyer)
+
+* View all products or filter by category
+* See featured, hot trend, and best seller sections
+* View product details with related products
+
+### ❤️ Wishlist & Cart
+
+* Add/remove items from wishlist
+* Add/remove/update items in cart
+* View total price, quantity
+
+### 💳 Payment & Checkout
+
+* Checkout system integrated with Stripe
+* Create Stripe session & handle success/cancel pages
+* View order summary after payment
+
+### 📆 Orders
+
+* Buyers can view order history & order details
+* Sellers can view their received orders
+
+### 🛍️ Misc Pages
+
+* About Us
+* Contact Page
+
+---
+
+## 📂 Project Structure
+
+```bash
 ecom-project/
-├── ecom_project/        # Django project configuration
-├── myapp/               # Main application
-│   ├── views.py         # Contains the home view
-│   ├── urls.py          # App-level URLs
-│   └── templates/
-│       └── home.html    # Homepage template
-├── db.sqlite3           # SQLite database
-└── manage.py            # Django project manager
+├── ecom_project/            # Django project settings
+├── myapp/                   # Main app containing views, models, templates
+│   ├── views.py             # All function-based views
+│   ├── urls.py              # Route definitions
+│   ├── templates/           # HTML templates (buyers & sellers)
+│   └── static/              # Static files (CSS, JS, images)
+├── db.sqlite3               # SQLite database
+└── manage.py                # Django entry point
 ```
 
-## ⚙️ Installation & Setup
+---
 
-Follow the steps below to run this project on your local machine:
+## ⚙️ How to Run This Project
 
-1. **Clone the Repository**
+### 1. Clone the repository
 
-   ```bash
-   git clone https://github.com/your-username/ecom-project.git
-   cd ecom-project
-   ```
+```bash
+git clone https://github.com/your-username/ecom-project.git
+cd ecom-project
+```
 
-2. **Create and Activate a Virtual Environment**
+### 2. Create a virtual environment and activate it
 
-   ```bash
-   python -m venv env
-   source env/bin/activate  # On Windows use: env\Scripts\activate
-   ```
+```bash
+python -m venv env
+source env/bin/activate        # On Windows: env\Scripts\activate
+```
 
-3. **Install Dependencies**
+### 3. Install dependencies
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-4. **Apply Migrations**
+### 4. Apply migrations
 
-   ```bash
-   python manage.py migrate
-   ```
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
 
-5. **Run the Development Server**
+### 5. Run the development server
 
-   ```bash
-   python manage.py runserver
-   ```
+```bash
+python manage.py runserver
+```
 
-6. **Open in Browser**
+### 6. Access in your browser
 
-   Visit: `http://127.0.0.1:8000/`
+```
+http://127.0.0.1:8000/
+```
 
-## 🔧 Future Improvements
+---
 
-- Product category and filtering system
-- Add to cart and remove from cart logic
-- Secure checkout with payment integration
-- User registration and login system
-- Improved UI using Bootstrap or Tailwind CSS
-- REST API integration for frontend/backend separation
+## 🔄 Future Enhancements
 
-## 🙋‍♂️ Author
+* Add product reviews and ratings
+* Email-based verification
+* Pagination and filtering
+* REST API support with DRF
+* Responsive UI with Tailwind CSS
+* Advanced admin dashboard for analytics
 
-**Your Name**  
-[GitHub Profile]([https://github.com/your-username](https://github.com/mohinkhan13))
+---
+
+## 👨‍💻 Author
+
+**Your Name**
+[GitHub Profile](https://github.com/mohinkhan13)
+
+---
 
 ## 📄 License
 
